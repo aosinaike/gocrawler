@@ -21,6 +21,10 @@ func main() {
 	srcUrl := flag.String("url", "", "web url to crawl")
 	dir := flag.String("dir", "", "web url to crawl is required")
 	flag.Parse()
+	crawlWebpage(srcUrl, dir)
+}
+
+func crawlWebpage(srcUrl *string, dir *string) {
 	parsedUrl, err := url.Parse(*srcUrl)
 	if err != nil {
 		fmt.Printf("%s", "Unable to parse url:"+*srcUrl)
@@ -45,12 +49,11 @@ func main() {
 				signal.Notify(c, os.Interrupt, syscall.SIGTERM)
 				go func() {
 					sig := <-c
-					downloadWebpage(&hrefValue, dir)
+					crawlWebpage(&hrefValue, dir)
 					fmt.Printf("Exiting webcrawler")
 					fmt.Println(sig)
 					os.Exit(1)
 				}()
-
 			}
 		}
 	})
